@@ -1,11 +1,11 @@
 import pygame
 
-# Define some colors
+# Define colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
 
-# Set up the Pygame window
+# Set up Pygame window
 pygame.init()
 size = (540, 600)
 screen = pygame.display.set_mode(size)
@@ -14,16 +14,19 @@ pygame.display.set_caption("Sudoku Solver")
 # Create the Sudoku board
 board = [[0] * 9 for _ in range(9)]
 
-# Define some helper functions
+# Define helper functions
+
+
 def draw_board():
     # Draws the Sudoku board on the Pygame screen
     screen.fill(WHITE)
-    
+
     # Draw the 3x3 sub-grid
     pygame.draw.rect(screen, BLACK, [60, 60, 540, 540], 2)
     for i in range(0, 10, 3):
         for j in range(-1, 10, 3):
-            pygame.draw.rect(screen, BLACK, [j * 60 + 60, i * 60 + 60, 180, 180], 2)
+            pygame.draw.rect(
+                screen, BLACK, [j * 60 + 60, i * 60 + 60, 180, 180], 2)
 
     # Draw the cell borders and numbers
     for i in range(9):
@@ -35,6 +38,14 @@ def draw_board():
                 font = pygame.font.SysFont('calibri', 50)
                 text = font.render(str(board[i][j]), True, BLACK)
                 screen.blit(text, (x + 20, y + 5))
+
+    # Display the instruction text
+    font = pygame.font.SysFont('calibri', 17)
+    text = font.render(
+        'Insert the values into boxes, press Enter to solve the puzzle', True, BLACK)
+    screen.blit(text, (60, 20))
+
+
 def solve():
     # Solves the Sudoku puzzle using a backtracking algorithm
     # Find the next empty cell
@@ -53,6 +64,7 @@ def solve():
                         board[i][j] = 0
                 return False
     return True
+
 
 def is_valid(row, col, num):
     """Checks if a number can be placed in a certain position"""
@@ -75,6 +87,7 @@ def is_valid(row, col, num):
             if board[i][j] == num:
                 return False
     return True
+
 
 # Main game loop
 selected = None
