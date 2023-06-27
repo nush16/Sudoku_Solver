@@ -16,7 +16,7 @@ board = [[0] * 9 for _ in range(9)]
 
 # Define some helper functions
 def draw_board():
-    """Draws the Sudoku board on the Pygame screen"""
+    # Draws the Sudoku board on the Pygame screen
     screen.fill(WHITE)
     
     # Draw the 3x3 sub-grid
@@ -36,7 +36,7 @@ def draw_board():
                 text = font.render(str(board[i][j]), True, BLACK)
                 screen.blit(text, (x + 20, y + 5))
 def solve():
-    """Solves the Sudoku puzzle using a backtracking algorithm"""
+    # Solves the Sudoku puzzle using a backtracking algorithm
     # Find the next empty cell
     for i in range(9):
         for j in range(9):
@@ -56,6 +56,9 @@ def solve():
 
 def is_valid(row, col, num):
     """Checks if a number can be placed in a certain position"""
+    # Check that the number is between 1 and 9
+    if not (1 <= num <= 9):
+        return False
     # Check row
     for i in range(9):
         if board[row][i] == num:
@@ -86,15 +89,24 @@ while running:
                 pos = pygame.mouse.get_pos()
                 col = pos[0] // 60
                 row = (pos[1] - 60) // 60
-                selected = (row, col)
+                # Check if the cell is empty
+                if board[row][col] == 0:
+                    selected = (row, col)
             elif event.button == 3:
                 selected = None
         elif event.type == pygame.KEYDOWN:
             if event.unicode.isdigit():
                 if selected:
-                    # Update the board with the new value
+                    # Update the board with the new value if it is valid
                     row, col = selected
-                    board[row][col] = int(event.unicode)
+                    if is_valid(row, col, int(event.unicode)):
+                        board[row][col] = int(event.unicode)
+                    else:
+                        # Display an error message to the user
+                        font = pygame.font.SysFont('calibri', 20)
+                        text = font.render('Invalid input!', True, BLACK)
+                        screen.blit(text, (col * 60 + 20, row * 60 + 30))
+                        pygame.display.update()
             elif event.key == pygame.K_BACKSPACE:
                 if selected:
                     row, col = selected
@@ -104,5 +116,3 @@ while running:
 
     draw_board()
     pygame.display.update()
-
-pygame.quit()
